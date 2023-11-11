@@ -15,4 +15,5 @@ int main() {
 		upd_input(input);
 		upd_wave(wave);
 	}
+	dstry_wave(wave);
 }
