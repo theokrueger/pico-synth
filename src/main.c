@@ -1,6 +1,28 @@
-#include <stdio.h>
+/**
+ * Copyright (c) 2020 Raspberry Pi (Trading) Ltd.
+ *
+ * SPDX-License-Identifier: BSD-3-Clause
+ */
+
+// Output PWM signals on pins 0 and 1
+
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
+
+uint32_t pwm_set_freq_duty(uint slice_num,
+                           uint chan, uint32_t f, int d) {
+    uint32_t clock = 125000000;
+    uint32_t divider16 = clock / f / 4096 +
+                         (clock % (f * 4096) != 0);
+    if (divider16 / 16 == 0)
+        divider16 = 16;
+    uint32_t wrap = clock * 16 / divider16 / f - 1;
+    pwm_set_clkdiv_int_frac(slice_num, divider16 / 16,
+                            divider16 & 0xF);
+    pwm_set_wrap(slice_num, wrap);
+    pwm_set_chan_level(slice_num, chan, wrap * d / 100);
+    return wrap;
+}
 
 int main() {
     /// \tag::setup_pwm[]
@@ -8,25 +30,20 @@ int main() {
     // GPIO 1 setup
     gpio_set_function(0, GPIO_FUNC_PWM);
     uint slice_num = pwm_gpio_to_slice_num(0);
-
-    float lowest = 95.375f;
-    float highest = 0.125f;
-
-    // pwm clock freq
-    pwm_set_clkdiv(slice_num, lowest / 16);
-    pwm_set_wrap(slice_num, 65465);
+    uint chan = pwm_gpio_to_channel(0);
     pwm_set_enabled(slice_num, true);
-    /// \end::setup_pwm[]
-    int div = 1000;
-        pwm_set_chan_level(slice_num, PWM_CHAN_A, div);
-    int delt = 100;
-//    while (1) {
-//        float n = div + delt;
-//        if (n < 1000 || n > 64000) delt *= -1;
-//        pwm_set_chan_level(slice_num, PWM_CHAN_A, div);
-////        pwm_set_clkdiv(slice_num, div+=delt);
-//        sleep_ms(100);
-//    }
-    // Note we could also use pwm_set_gpio_level(gpio, x) which looks up the
-    // correct slice and channel for a given GPIO.
+    float lowest = 55;
+    float highest = 3520;
+
+    float pitch = lowest;
+    float mult = 1.05946309436f;
+    while (1) {
+        float o = mult * pitch;
+        if (o <= lowest || o >= highest) {
+            mult = 1 / mult;
+        }
+        pitch *= mult;
+        pwm_set_freq_duty(slice_num, chan, pitch, 50);
+        sleep_ms(500);
+    }
 }
