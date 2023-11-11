@@ -7,7 +7,7 @@ if [[ "$?" != 0 ]]; then
     exit
 fi
 
-cmake $args .. && make
+cmake -DCMAKE_BUILD_TYPE=Release .. && make
 if [[ "$?" != 0 ]]; then
     echo 'build failed at make or cmake!'
     exit
