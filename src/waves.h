@@ -1,12 +1,15 @@
 #pragma once
 
 enum WaveTypes {
+	SineWave,
 	SquareWave,
+	SawWave,
 };
 
 typedef struct {
         int32_t sampling_rate;
-	int t;
+	uint64_t t;
+	uint64_t i;
 	uint slice_num;
 } WV_LOC;
 
