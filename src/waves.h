@@ -3,21 +3,16 @@
 
 #include "buttons.h"
 
-#define WRAP 1000
-#define LVL_MAX WRAP + 1
-#define LVL_MIN 0
-#define HALFSTEP 1.05946309436
+#define LVL_MAX 4096
 
 enum WaveTypes {
     SineWave,
     SquareWave,
     SawWave,
+    TriangleWave
 };
 
 typedef struct {
-    int32_t sampling_rate;
-    uint64_t t;
-    uint64_t i;
     uint slice_num;
 } WV_LOC;
 
@@ -32,6 +27,6 @@ typedef struct {
 
 Wave *setup_wave();
 void update_wave(Wave *wv, Input *inp);
-void dstry_wave(Wave *wv);
+
 
 #endif

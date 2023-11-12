@@ -6,14 +6,17 @@
 
 // buttons store their state next update, pots always store
 typedef struct {
-	bool jsb;
-	uint64_t jsb_cd;
-	float jsx;
-	float jsy;
-	uint32_t fret_state;
+    bool jsb;
+    uint64_t jsb_cd;
+    float jsx;
+    float jsy;
+    uint32_t fret_state;
+//    bool last_state;
+    bool signal;
 } Input;
 
-Input* setup_input();
+Input *setup_input();
+
 void update_input(Input *inp, int t_ms);
 
 #endif
