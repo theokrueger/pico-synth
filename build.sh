@@ -1,5 +1,6 @@
 #!/bin/bash
 export PICO_SDK_PATH=/opt/pico-sdk/
+export PICO_EXTRAS_PATH=/opt/pico-extras/
 
 mkdir -p "build/" && cd "build/"
 if [[ "$?" != 0 ]]; then
