@@ -16,7 +16,7 @@ Input *setup_input() {
     inp->jsy = 0.0f;
 
     // button
-	for (int i = BUTTON_C; i <= BUTTON_B; ++i) {
+	for (int i = 4; i <= 15; ++i) {
 		gpio_init(i);
 	}
 
@@ -27,11 +27,11 @@ Input *setup_input() {
     return inp;
 }
 
-void get_inputs(Input *inp, int t_ms) {
+void get_inputs(Input *inp, uint64_t t_ms) {
     /* JOYSTICK */
     // joystick button
     if (inp->jsb_cd + COOLDOWN < t_ms) {
-        inp->jsb_cd = 0;
+        inp->jsb_cd = t_ms;
         inp->jsb = gpio_get(JSB_GPIO);
     }
     // joystick x
@@ -42,9 +42,10 @@ void get_inputs(Input *inp, int t_ms) {
     adc_select_input(JSY_ADC);
     inp->jsy = ADC_FLOAT;
 	inp->fret_state = 0;
-	for (int i = BUTTON_C; i <= BUTTON_B; ++i) {
-		inp->fret_state |= gpio_get(i) << (i - BUTTON_C);
+	for (int i = 4; i <= 15; ++i) {
+		inp->fret_state |= gpio_get(i) << i;
 	}
+    inp->fret_state ^= 1 << 12;
     return;
 }
 

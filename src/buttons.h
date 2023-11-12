@@ -7,7 +7,7 @@
 // buttons store their state next update, pots always store
 typedef struct {
 	bool jsb;
-	uint16_t jsb_cd;
+	uint64_t jsb_cd;
 	float jsx;
 	float jsy;
 	uint32_t fret_state;

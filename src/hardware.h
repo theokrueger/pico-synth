@@ -9,46 +9,19 @@
 #define JSB_GPIO 22
 
 
-// Fret buttons.
-#define BUTTON_C 4
-#define BUTTON_CS 5
-#define BUTTON_D 6
-#define BUTTON_DS 7
-#define BUTTON_E 8
-#define BUTTON_F 9
-#define BUTTON_FS 10
-#define BUTTON_G 11
-#define BUTTON_GS 12
-#define BUTTON_A 13
-#define BUTTON_AS 14
-#define BUTTON_B 15
-
-// Masks for fret buttons
-#define MASK_BUTTON_C 1
-#define MASK_BUTTON_CS 2
-#define MASK_BUTTON_D 4
-#define MASK_BUTTON_DS 8
-#define MASK_BUTTON_E 16
-#define MASK_BUTTON_F 32
-#define MASK_BUTTON_FS 64
-#define MASK_BUTTON_G 128
-#define MASK_BUTTON_GS 256
-#define MASK_BUTTON_A 512
-#define MASK_BUTTON_AS 1024
-#define MASK_BUTTON_B 2048
 
 // Freqs
-#define FREQ_C 261.6256f 
-#define FREQ_CS 277.1826f
-#define FREQ_D 293.6648f 
-#define FREQ_DS 311.1270f
-#define FREQ_E 329.6276f
-#define FREQ_F 349.2282f
-#define FREQ_FS 369.9944f
-#define FREQ_G 391.9954f
-#define FREQ_GS 415.302f
-#define FREQ_A 440.0f
-#define FREQ_AS 466.164f
-#define FREQ_B 493.883f
+#define FREQ_C 32.70320f
+#define FREQ_CS 34.64783f
+#define FREQ_D 36.70810f
+#define FREQ_DS 38.89087f
+#define FREQ_E 41.20344f
+#define FREQ_F 43.65353f
+#define FREQ_FS 46.24930f
+#define FREQ_G 48.99943f
+#define FREQ_GS 51.91309f
+#define FREQ_A 55
+#define FREQ_AS 58.27047f
+#define FREQ_B 61.73541
 
 #endif
