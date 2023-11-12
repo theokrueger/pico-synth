@@ -13,10 +13,9 @@ int main() {
 	Wave *wave = setup_wave();
 	//loop
 	while(1) {
-	        uint64_t start = time_us_64();
-		upd_input(input, (int)(start >> 10)); // approximate 1 second
-		upd_wave(wave, input);
-
+	    uint64_t start = time_us_64();
+		update_input(input, (int)(start >> 10)); // approximate 1 second
+		update_wave(wave, input);
 		uint64_t diff = time_us_64() - start;
 		sleep_us(wave->sleep_us - diff);
 	}

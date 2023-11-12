@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "math.h": "c",
+        "stdio.h": "c",
+        "pwm.h": "c",
+        "stdlib.h": "c",
+        "compare": "c",
+        "*.tcc": "c",
+        "type_traits": "c",
+        "typeinfo": "c"
+    }
+}

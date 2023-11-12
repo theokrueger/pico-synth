@@ -1,55 +1,61 @@
 #include "buttons.h"
-#include "pico/stdlib.h"
+#include "hardware.h"
+
 #include <stdlib.h>
+
+#include "pico/stdlib.h"
 
 #define COOLDOWN 500
 #define ADC_FLOAT 1.0f * adc_read() / (0xFFF)
-Input* setup_input()
-{
-        // defs
-        Input *inp = (Input*) malloc(sizeof(Input));
-        inp->jsb = false;
-        inp->jsx = 0.0f;
-	inp->jsy = 0.0f;
 
-	// button
+Input *setup_input() {
+    // defs
+    Input *inp = (Input *)malloc(sizeof(Input));
+    inp->jsb = false;
+    inp->jsx = 0.0f;
+    inp->jsy = 0.0f;
 
-        // adc
-        adc_init();
-        adc_gpio_init(JSX_GPIO);
-	adc_gpio_init(JSY_GPIO);
-
-	return inp;
-}
-
-void get_inputs(Input *inp, int t_ms)
-{
-	/* JOYSTICK */
-	// joystick button
-	if (inp->jsb_cd + COOLDOWN < t_ms) {
-		inp->jsb_cd = 0;
+    // button
+	for (int i = BUTTON_C; i <= BUTTON_B; ++i) {
+		gpio_init(i);
 	}
-        // joystick x
-        adc_select_input(JSX_ADC);
-        inp->jsx = ADC_FLOAT;
 
-	// joystick y
-	adc_select_input(JSY_ADC);
-	inp->jsy = ADC_FLOAT;
-
-	return;
+    // adc
+    adc_init();
+    adc_gpio_init(JSX_GPIO);
+    adc_gpio_init(JSY_GPIO);
+    return inp;
 }
 
-void update_data(Input *inp)
-{
-	// jsx -> freq
-	//wv->hz = inp->jsx * LVL_MAX;
-	return;
+void get_inputs(Input *inp, int t_ms) {
+    /* JOYSTICK */
+    // joystick button
+    if (inp->jsb_cd + COOLDOWN < t_ms) {
+        inp->jsb_cd = 0;
+        inp->jsb = gpio_get(JSB_GPIO);
+    }
+    // joystick x
+    adc_select_input(JSX_ADC);
+    inp->jsx = ADC_FLOAT;
+
+    // joystick y
+    adc_select_input(JSY_ADC);
+    inp->jsy = ADC_FLOAT;
+	inp->fret_state = 0;
+	for (int i = BUTTON_C; i <= BUTTON_B; ++i) {
+		inp->fret_state |= gpio_get(i) << (i - BUTTON_C);
+	}
+    return;
 }
 
-void upd_input(Input *inp, int t_ms)
-{
-	get_inputs(inp, t_ms);
-	update_data(inp);
-	return;
+void update_data(Input *inp) {
+    // jsx -> freq
+    // wv->hz = inp->jsx * LVL_MAX;
+    return;
+}
+
+void update_input(Input *inp, int t_ms) {
+    get_inputs(inp, t_ms);
+    update_data(inp);
+    return;
 }
