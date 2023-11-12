@@ -30,17 +30,17 @@ Input *setup_input() {
 void get_inputs(Input *inp, uint64_t t_ms) {
     /* JOYSTICK */
     // joystick button
-    if (inp->jsb_cd + COOLDOWN < t_ms) {
-        inp->jsb_cd = t_ms;
-        inp->jsb = gpio_get(JSB_GPIO);
-    }
-    // joystick x
-    adc_select_input(JSX_ADC);
-    inp->jsx = ADC_FLOAT;
-
-    // joystick y
-    adc_select_input(JSY_ADC);
-    inp->jsy = ADC_FLOAT;
+//    if (inp->jsb_cd + COOLDOWN < t_ms) {
+//        inp->jsb_cd = t_ms;
+//        inp->jsb = gpio_get(JSB_GPIO);
+//    }
+//    // joystick x
+//    adc_select_input(JSX_ADC);
+//    inp->jsx = ADC_FLOAT;
+//
+//    // joystick y
+//    adc_select_input(JSY_ADC);
+//    inp->jsy = ADC_FLOAT;
 	inp->fret_state = 0;
 	for (int i = 4; i <= 15; ++i) {
 		inp->fret_state |= gpio_get(i) << i;

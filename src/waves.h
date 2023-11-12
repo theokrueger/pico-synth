@@ -26,6 +26,8 @@ typedef struct {
     WV_LOC *loc;
     int mult;
     int type;
+    uint64_t time;
+    uint64_t start;
 } Wave;
 
 Wave *setup_wave();

@@ -22,6 +22,6 @@
 #define FREQ_GS 51.91309f
 #define FREQ_A 55
 #define FREQ_AS 58.27047f
-#define FREQ_B 61.73541
+#define FREQ_B 61.73541f
 
 #endif
