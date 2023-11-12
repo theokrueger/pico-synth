@@ -12,5 +12,5 @@ add_executable(pico_synth
     src/led.c
 )
 
-target_link_libraries(pico_synth pico_stdlib hardware_pwm hardware_adc pico_audio_i2s)
+target_link_libraries(pico_synth pico_stdlib hardware_pwm hardware_adc)
 pico_add_extra_outputs(pico_synth)
