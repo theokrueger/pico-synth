@@ -12,5 +12,7 @@ add_executable(pico_synth
     src/led.c
 )
 
+pico_enable_stdio_usb(pico_synth 1)
+pico_enable_stdio_uart(pico_synth 0)
 target_link_libraries(pico_synth pico_stdlib hardware_pwm hardware_adc)
 pico_add_extra_outputs(pico_synth)

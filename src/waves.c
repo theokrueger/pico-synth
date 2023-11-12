@@ -1,15 +1,12 @@
 #include "hardware/pwm.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include "waves.h"
 #include "led.h"
 #include "pico/stdlib.h"
 
-const uint AUD_OUT= 0;
-const uint WRAP = 1000;
-const uint LVL_MAX = WRAP + 1;
-const uint LVL_MIN = 0;
-const double HALFSTEP = 1.05946309436;
+#define AUD_OUT 0
 
 Wave* setup_wave() {
         Wave *wv = (Wave*) malloc(sizeof(Wave));
@@ -22,7 +19,7 @@ Wave* setup_wave() {
         wv->loc->t = 0;
 	wv->loc->i = 0;
         // params we change
-        wv->hz = 840 * HALFSTEP; // hack
+        wv->hz = (int)(840.0f * pow(HALFSTEP, 3)); // calibrate per speaker for some reason????
         wv->type = SineWave;
 
         // gpio setup
@@ -34,12 +31,15 @@ Wave* setup_wave() {
         return wv;
 }
 
-void upd_wave(Wave *wv) {
+void upd_wave(Wave *wv, Input *inp) {
         double level = 0;
+	int newhz = wv->hz;
+	//newhz += (inp->jsx - (0xFFF >> 1)) * 2 * 1000;
+	printf("%f\n", inp->jsx);
         switch (wv->type)
         {
         case SineWave:
-                level = (1 + sinf(2*M_PI*wv->hz*wv->loc->i/wv->loc->sampling_rate))/2*LVL_MAX;
+                level = (1 + sinf(2*M_PI*newhz*wv->loc->i/wv->loc->sampling_rate))/2*LVL_MAX;
 		break;
         case SquareWave:
 //		level = sleep_us
@@ -57,6 +57,7 @@ void upd_wave(Wave *wv) {
 	++wv->loc->i;
         return;
 }
+
 void dstry_wave(Wave *wv) {
         return;
 }

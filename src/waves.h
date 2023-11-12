@@ -1,4 +1,10 @@
 #pragma once
+#include "buttons.h"
+
+#define WRAP 1000
+#define LVL_MAX WRAP + 1
+#define LVL_MIN 0
+#define HALFSTEP 1.05946309436
 
 enum WaveTypes {
 	SineWave,
@@ -21,6 +27,6 @@ typedef struct {
 } Wave;
 
 Wave* setup_wave();
-void upd_wave(Wave *wv);
+void upd_wave(Wave *wv, Input *inp);
 void dstry_wave(Wave *wv);
 
