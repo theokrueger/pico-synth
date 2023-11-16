@@ -11,10 +11,10 @@
 
 namespace PicoSynth {
     enum WaveTypes {
-        SineWave,
-        SquareWave,
-        SawWave,
-        TriangleWave
+        SineWave = 0x0,
+        SquareWave = 0x1,
+        SawWave = 0x2,
+        TriangleWave = 0x3
     };
 
     class Wave {
@@ -24,7 +24,7 @@ namespace PicoSynth {
             void Update();
         private:
             double CalculateLevel(double new_frequency, double modulation);
-            WaveTypes m_WaveType;
+            int m_WaveType;
             int32_t m_Sleep;
             uint m_SliceIndex;
             int m_Multiplier;

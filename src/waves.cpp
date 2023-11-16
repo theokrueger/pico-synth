@@ -41,7 +41,7 @@ namespace PicoSynth {
 
     void Wave::Update() {
         if (this->m_InputHandler->GetJoystickButtonPressed()) {
-            this->m_WaveType = (WaveTypes)((int)this->m_WaveType + 1 % 4 + (int)SineWave);
+            this->m_WaveType = (this->m_WaveType + 1) % 4;
         }
         double level = 0;
         float modulation_factor = 1.0f;
