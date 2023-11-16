@@ -3,6 +3,7 @@
 
 #define M_PI 3.14159265358979323846
 #define CHANNELS 4
+const float conversion_factor = 3.3f / (1 << 12);
 
 #include <math.h>
 #include <stdio.h>
@@ -21,8 +22,8 @@ Wave *setup_wave() {
     wv->mult = 8;
     wv->loc = (WV_LOC *) malloc(sizeof(WV_LOC));
     wv->type = SawWave;
-
-
+    wv->min_read = 0;
+    wv->mod = 1;
     // gpio setup
     wv->loc->slice_num = pwm_gpio_to_slice_num(AUD_OUT);
     gpio_set_function(AUD_OUT, GPIO_FUNC_PWM);
@@ -32,8 +33,8 @@ Wave *setup_wave() {
 }
 
 // Returns a value between 0 and 1.0 that denotes the amp of the wave
-double get_level(Wave *wv, double newhz, double mod) {
-    newhz *= wv->mult * mod;
+double get_level(Wave *wv, double newhz) {
+    newhz *= wv->mult * wv->mod;
     // effective_time stores
     double effective_time = (newhz * (wv->time - wv->start) / 1000000);
     effective_time -= (int) effective_time;
@@ -58,40 +59,47 @@ double get_level(Wave *wv, double newhz, double mod) {
 
 void update_wave(Wave *wv, Input *inp) {
     if (inp->signal) {
-        wv->type = (wv->type + 1) % 4 + SineWave;
+        switch (wv->type) {
+            case SineWave:
+                wv->type = SquareWave;
+                break;
+            case SquareWave:
+                wv->type = SawWave;
+                break;
+            case SawWave:
+                wv->type = TriangleWave;
+                break;
+            case TriangleWave:
+                wv->type = SineWave;
+                break;
+        }
     }
     double level = 0;
-    double mod = exp((inp->jsx - 2048.0f) / 2048.0f);
-    if (inp->jsx > 2048) {
-
-    } else {
-
-    }
-//    if (inp->jsx) {
-//        if (inp->jsx < 0.1 && wv->mult > 1) {
-//            wv->mult >>= 1;
-//        } else if (inp->jsx > 0.1 && wv->mult < 256) {
-//            wv->mult <<= 1;
-//        }
-//    }
     if (inp->fret_state) {
         SET_LED_ON();
         wv->time = time_us_64();
-        if (inp->fret_state & (1 << 4)) level += get_level(wv, FREQ_C, mod);
-        if (inp->fret_state & (1 << 8)) level += get_level(wv, FREQ_CS, mod);
-        if (inp->fret_state & (1 << 12)) level += get_level(wv, FREQ_D, mod);
-        if (inp->fret_state & (1 << 11)) level += get_level(wv, FREQ_DS, mod);
-        if (inp->fret_state & (1 << 13)) level += get_level(wv, FREQ_E, mod);
-        if (inp->fret_state & (1 << 10)) level += get_level(wv, FREQ_F, mod);
-        if (inp->fret_state & (1 << 6)) level += get_level(wv, FREQ_FS, mod);
-        if (inp->fret_state & (1 << 5)) level += get_level(wv, FREQ_G, mod);
-        if (inp->fret_state & (1 << 7)) level += get_level(wv, FREQ_GS, mod);
-        if (inp->fret_state & (1 << 14)) level += get_level(wv, FREQ_A, mod);
-        if (inp->fret_state & (1 << 15)) level += get_level(wv, FREQ_AS, mod);
-        if (inp->fret_state & (1 << 9)) level += get_level(wv, FREQ_B, mod);
+        if (wv->time - wv->min_read > 100000) {
+            uint16_t val = adc_read();
+            printf("%llu %hu %f\n", wv->min_read - wv->time, val, exp2f((val - 2048.0f) / 2048.0f));
+            wv->mod = exp2f((val - 2048.0f) / 2048.0f);
+            wv->min_read = wv->time;
+        }
+
+        if (inp->fret_state & (1 << 4)) level += get_level(wv, FREQ_C);
+        if (inp->fret_state & (1 << 8)) level += get_level(wv, FREQ_CS);
+        if (inp->fret_state & (1 << 12)) level += get_level(wv, FREQ_D);
+        if (inp->fret_state & (1 << 11)) level += get_level(wv, FREQ_DS);
+        if (inp->fret_state & (1 << 13)) level += get_level(wv, FREQ_E);
+        if (inp->fret_state & (1 << 10)) level += get_level(wv, FREQ_F);
+        if (inp->fret_state & (1 << 6)) level += get_level(wv, FREQ_FS);
+        if (inp->fret_state & (1 << 5)) level += get_level(wv, FREQ_G);
+        if (inp->fret_state & (1 << 7)) level += get_level(wv, FREQ_GS);
+        if (inp->fret_state & (1 << 14)) level += get_level(wv, FREQ_A);
+        if (inp->fret_state & (1 << 15)) level += get_level(wv, FREQ_AS);
+        if (inp->fret_state & (1 << 9)) level += get_level(wv, FREQ_B);
         level /= CHANNELS;
         pwm_set_chan_level(wv->loc->slice_num, PWM_CHAN_A, (int) (level * LVL_MAX));
-    }else{
+    } else {
         SET_LED_OFF();
     }
     return;

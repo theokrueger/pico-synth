@@ -3,9 +3,9 @@
 
 // Joystick.
 #define JSX_GPIO 27
-#define JSX_ADC 1
+#define JSX_ADC 0
 #define JSY_GPIO 26
-#define JSY_ADC 0
+#define JSY_ADC 1
 #define JSB_GPIO 17
 
 

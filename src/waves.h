@@ -23,6 +23,9 @@ typedef struct {
     int type;
     uint64_t time;
     uint64_t start;
+    uint64_t min_read;
+    double mod;
+
 } Wave;
 
 Wave *setup_wave();

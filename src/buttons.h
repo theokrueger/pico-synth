@@ -8,10 +8,8 @@
 typedef struct {
     bool jsb;
     uint64_t jsb_cd;
-    float jsx;
-    float jsy;
     uint32_t fret_state;
-//    bool last_state;
+    uint64_t last_read;
     bool signal;
 } Input;
 
