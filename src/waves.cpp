@@ -44,34 +44,33 @@ namespace PicoSynth {
             this->m_WaveType = (WaveTypes)((int)this->m_WaveType + 1 % 4 + (int)SineWave);
         }
         double level = 0;
-        // double modulation_factor = this->m_InputHandler->GetJoystickYCentered() / 2048.0f;
-        double modulation_factor = 1.0f;
+        float modulation_factor = 1.0f;
         if (this->m_InputHandler->GetAnyFretPressed()) {
             this->m_InputHandler->SetDebugLED(true);
             this->m_WaveTime = time_us_64();
-            if (this->m_InputHandler->GetFretPressed(1 << 4))
+            if (this->m_InputHandler->GetFretPressed(1 << 5))
                 level += CalculateLevel(FREQ_C, modulation_factor);
-            if (this->m_InputHandler->GetFretPressed(1 << 8))
+            if (this->m_InputHandler->GetFretPressed(1 << 3))
                 level += CalculateLevel(FREQ_CS, modulation_factor);
             if (this->m_InputHandler->GetFretPressed(1 << 12))
                 level += CalculateLevel(FREQ_D, modulation_factor);
-            if (this->m_InputHandler->GetFretPressed(1 << 11))
+            if (this->m_InputHandler->GetFretPressed(1 << 2))
                 level += CalculateLevel(FREQ_DS, modulation_factor);
-            if (this->m_InputHandler->GetFretPressed(1 << 13))
-                level += CalculateLevel(FREQ_E, modulation_factor);
             if (this->m_InputHandler->GetFretPressed(1 << 10))
+                level += CalculateLevel(FREQ_E, modulation_factor);
+            if (this->m_InputHandler->GetFretPressed(1 << 8))
                 level += CalculateLevel(FREQ_F, modulation_factor);
-            if (this->m_InputHandler->GetFretPressed(1 << 6))
+            if (this->m_InputHandler->GetFretPressed(1 << 13))
                 level += CalculateLevel(FREQ_FS, modulation_factor);
-            if (this->m_InputHandler->GetFretPressed(1 << 5))
+            if (this->m_InputHandler->GetFretPressed(1 << 9))
                 level += CalculateLevel(FREQ_G, modulation_factor);
             if (this->m_InputHandler->GetFretPressed(1 << 7))
                 level += CalculateLevel(FREQ_GS, modulation_factor);
-            if (this->m_InputHandler->GetFretPressed(1 << 14))
+            if (this->m_InputHandler->GetFretPressed(1 << 11))
                 level += CalculateLevel(FREQ_A, modulation_factor);
-            if (this->m_InputHandler->GetFretPressed(1 << 15))
+            if (this->m_InputHandler->GetFretPressed(1 << 6))
                 level += CalculateLevel(FREQ_AS, modulation_factor);
-            if (this->m_InputHandler->GetFretPressed(1 << 9))
+            if (this->m_InputHandler->GetFretPressed(1 << 4))
                 level += CalculateLevel(FREQ_B, modulation_factor);
             level /= CHANNELS;
             pwm_set_chan_level(this->m_SliceIndex, PWM_CHAN_A, (int)(level * ADC_MAX));

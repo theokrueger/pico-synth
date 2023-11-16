@@ -10,7 +10,7 @@ namespace PicoSynth {
         gpio_init(JSB_GPIO);
 
         // Fret init.
-        for (int i = 4; i <= 15; ++i) {
+        for (int i = 2; i <= 13; ++i) {
             gpio_init(i);
         }
 
@@ -32,13 +32,17 @@ namespace PicoSynth {
     
         // Frets
         this->m_FretState = 0;
-        for (int i = 4; i <= 15; ++i) {
+        for (int i = 2; i <= 13; ++i) {
             this->m_FretState |= gpio_get(i) << i;
         }
         this->m_FretState ^= 1 << 12;
     }
 
     bool GPIOHandle::GetAnyFretPressed() {
+        return this->m_FretState;
+    }
+
+    int GPIOHandle::GetFretState() {
         return this->m_FretState;
     }
     
@@ -50,19 +54,19 @@ namespace PicoSynth {
         return this->m_FretState & fret_mask;
     }
 
-    float GPIOHandle::GetJoystickXRaw() {
+    double GPIOHandle::GetJoystickXRaw() {
         return this->m_JoystickX;
     }
 
-    float GPIOHandle::GetJoystickYRaw() {
+    double GPIOHandle::GetJoystickYRaw() {
         return this->m_JoystickY;
     }
 
-    float GPIOHandle::GetJoystickXCentered() {
+    double GPIOHandle::GetJoystickXCentered() {
         return this->GetJoystickXRaw() - (ADC_MAX / 2);
     }
 
-    float GPIOHandle::GetJoystickYCentered() {
+    double GPIOHandle::GetJoystickYCentered() {
         return this->GetJoystickYRaw() - (ADC_MAX / 2);
     }
 

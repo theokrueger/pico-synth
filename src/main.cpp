@@ -10,6 +10,7 @@ int main() {
 	PicoSynth::GPIOHandle *g_InputHandle = new PicoSynth::GPIOHandle();
 	PicoSynth::Wave *g_WaveHandle = new PicoSynth::Wave(g_InputHandle);
 	g_WaveHandle->Initialize();
+	int i = 0;
 	for (;;) {
 		g_InputHandle->Update();
 		g_WaveHandle->Update();
